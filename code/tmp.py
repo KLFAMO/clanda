@@ -1,0 +1,19 @@
+rls = 194_399_987_408_400 + 14e6
+nc_rls = 168.5e6
+beat_ptb = 27.729e6
+N15 = 777_621
+
+f_LO = rls + nc_rls + beat_ptb
+
+fr = (f_LO - 70e6) / N15
+frdm = 4*fr - 980e6
+mfrdm = 19_973_651.11
+
+f_NKT = f_LO - 160e6
+
+print(rls)
+print(fr)
+print(frdm)
+print(mfrdm)
+print(frdm - mfrdm)
+print(f"{f_NKT:_}")
