@@ -64,7 +64,7 @@ def get_data(
     for table in included_tables:
         d = MTSerie()
         for day in range(days[0], days[1]+1):
-            d.add_mjdf_from_datfile(f'data_files/export_{day}/{table}.csv', delimiter=',', skiprows=1)
+            d.add_mjdf_from_datfile(f'../data_files/export_{day}/{table}.csv', delimiter=',', skiprows=1)
         d, rm_mask = d.resample2(
             period_s=1, sh_s=included_tables[table]['sh_s'],
             tol_s=included_tables[table]['tol_s'],
