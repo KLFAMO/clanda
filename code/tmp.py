@@ -11,7 +11,7 @@ mfrdm = 19_973_651.11
 
 f_NKT = f_LO - 160e6
 
-print(rls)
+print(f"{rls:_}")
 print(fr)
 print(frdm)
 print(mfrdm)
