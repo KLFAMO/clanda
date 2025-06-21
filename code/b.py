@@ -1,3 +1,9 @@
+"""
+this file is probably not used anymore
+but we need to make sure it does not break the code
+"""
+
+
 import numpy as np
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt

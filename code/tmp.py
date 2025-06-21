@@ -1,3 +1,8 @@
+"""
+This script calculates the frequency of a laser system based on given constants and parameters.
+It is not used in the main codebase but is provided for reference or testing purposes.
+"""
+
 rls = 194_399_987_408_400 + 14e6
 nc_rls = 168.5e6
 beat_ptb = 27.729e6

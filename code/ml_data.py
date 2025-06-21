@@ -1,3 +1,9 @@
+"""
+In this file, we define the data for the multi-lock measurements.
+It is used by the other scripts to calculate the shifts and uncertainties
+in the frequency of a clock.
+"""
+
 mlb = (
     {
         'range': (60751.3643, 60751.678696), 'param': 'B', 'xs': [0.25, 0.3],
