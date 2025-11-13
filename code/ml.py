@@ -4,9 +4,12 @@ import sys
 sys.path.insert(1, "../mytools/")
 
 from rm_data import rm_periods
-# from ml_data import mlb as m
-from ml_data import ml698 as m
-from get_data_sr_link import get_data
+from ml_data import mlb as m
+# from ml_data import ml698 as m
+# from ml_data import ml698b as m
+# from ml_data import ml813 as m
+# from ml_data import mlatoms as m
+from get_data_test import get_data
 
 
 
@@ -21,7 +24,7 @@ gts = get_data(
     },
     days=(60751, 60756),
     rm_ml_err=True,
-    mjd_range=m[2]['range'],
+    mjd_range=m[4]['range'],
 )
 
 gts.math_mts_and_number('multiply', 'sr1_ml1_f', -1, 'mml1_f')

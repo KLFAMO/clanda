@@ -17,7 +17,7 @@ class Shift:
         self.tot_u = 0
     
     def __str__(self):
-        return f'{self.name:<16}{self.shift:>8.3f} (sys: {self.u})'
+        return f'{self.name:<16}{self.shift:>8.3f} (sys: {self.u}) {self.u/429_228_066_418_007.01}'
 
 
 class Budget:
@@ -31,7 +31,7 @@ class Budget:
         for i in self.shifts:
             s = s + i.__str__() + '\n'
         s += '-------------------------------\n'
-        s += f'{'total':<16}{self.tot_shift:>8.3f} (sys: {self.tot_u}) Hz'
+        s += f'total {self.tot_shift} (sys: {self.tot_u}) Hz {self.tot_u/429_228_066_418_007.01}'
         return s
 
     def add_shift(self, name, shift=0, u=0):

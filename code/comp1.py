@@ -10,7 +10,7 @@ def MJD2UTC(mjd, strfmt='%Y-%m-%d %H:%M:%S'):
     t = ast.Time(mjd, format='mjd')
     return t.strftime(strfmt)
 
-mjd = 60766
+mjd = 60764
 date_str = MJD2UTC(mjd, strfmt='%Y-%m-%d')
 
 start_mjd = mjd
@@ -18,9 +18,9 @@ stop_mjd = mjd+1
 period_mjd = 1/24/60/60  # 1 second
 nm = np.arange(start_mjd, stop_mjd, period_mjd)
 
-shift = 15e6
+shift = 50e6
 
-with open(f"share_files/PTB_NIRP-UMK_RLS/{date_str}_PTB_NIRP-UMK_RLS.dat", 'w') as f:
+with open(f"../share_files/PTB_RLS-UMK_RLS/{date_str}_PTB_RLS-UMK_RLS.dat", 'w') as f:
     # f.write(f"# MJD\tA-B\tvalidity\n")
     
     for mjd in nm:

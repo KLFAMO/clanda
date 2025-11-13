@@ -18,8 +18,8 @@ gts = get_data(
         "comb2_f_avg_counter6": {'sh_s':0.05, 'tol_s':0},
         "comb2_f_avg_counter7": {'sh_s':0.05, 'tol_s':0},
     },
-    # days=(60759, 60765),
-    days=(60790, 60790),
+    days=(60760, 60761),
+    # days=(60790, 60790),
     rm_link_err=True,
     rm_sr_err=True,
 )

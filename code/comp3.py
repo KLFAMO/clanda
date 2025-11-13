@@ -19,16 +19,18 @@ def MJD2UTC(mjd, strfmt='%Y-%m-%d %H:%M:%S'):
 mjd = 60764
 date_str = MJD2UTC(mjd, strfmt='%Y-%m-%d')
 
-gts = get_data(
-    included_tables={
-        "sr1_ml1_f": {'sh_s':0, 'tol_s':5},
-        "comb2_f_avg_counter5": {'sh_s':0.05, 'tol_s':0},
-        "comb2_f_avg_counter6": {'sh_s':0.05, 'tol_s':0},
-    },
-    days=(mjd, mjd),
-    rm_link_err=True,
-    rm_sr_err=True,
-)
+# gts = get_data(
+#     included_tables={
+#         "sr1_ml1_f": {'sh_s':0, 'tol_s':5},
+#         "comb2_f_avg_counter5": {'sh_s':0.05, 'tol_s':0},
+#         "comb2_f_avg_counter6": {'sh_s':0.05, 'tol_s':0},
+#     },
+#     days=(mjd, mjd),
+#     rm_link_err=True,
+#     rm_sr_err=True,
+# )
+
+
 
 ptb_freq = 194_399_987_408_400 
 nc_rls = 168.5e6
@@ -53,9 +55,9 @@ gts.math_mts_and_number('add', 'zero', 1e-15, 'uncert')
 #     'ratio',
 # ])
 
-gts.create_comparator_file(
-    filename=f'share_files/UMK_LO-UMK_Sr1/{date_str}_UMK_LO-UMK_Sr1.dat',
-    mts_names=['ratio', 'valid', 'uncert'],
-    headers=['ΔA→B', 'flag', 'relative systematic uncertainty'],
-    formats=['.16f', '.0f', '.4e'],
-)
+# gts.create_comparator_file(
+#     filename=f'share_files/UMK_LO-UMK_Sr1/{date_str}_UMK_LO-UMK_Sr1.dat',
+#     mts_names=['ratio', 'valid', 'uncert'],
+#     headers=['ΔA→B', 'flag', 'relative systematic uncertainty'],
+#     formats=['.16f', '.0f', '.4e'],
+# )

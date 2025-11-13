@@ -58,17 +58,17 @@ def get_data(
         gts.append_mtserie(mts_name=table, mts=d)
 
     # add ptb data ------
-    # d = MTSerie()
-    # for day in range(days[0], days[1]+1):
-    #     d.add_mjdf_from_datfile(f'data_files/export_{day}/ptb.dat', delimiter='\t', skiprows=3)
-    # d, rm_mask = d.resample2(
-    #     period_s=1, sh_s=0.05,
-    #     tol_s=0,
-    #     start_mjd=days[0],
-    #     stop_mjd=days[0]+days_range
-    # )
-    # common_rm_mask = common_rm_mask | rm_mask if common_rm_mask is not None else rm_mask
-    # gts.append_mtserie(mts_name='ptb', mts=d)
+    d = MTSerie()
+    for day in range(days[0], days[1]+1):
+        d.add_mjdf_from_datfile(f'data_files/export_{day}/ptb.dat', delimiter='\t', skiprows=3)
+    d, rm_mask = d.resample2(
+        period_s=1, sh_s=0.05,
+        tol_s=0,
+        start_mjd=days[0],
+        stop_mjd=days[0]+days_range
+    )
+    common_rm_mask = common_rm_mask | rm_mask if common_rm_mask is not None else rm_mask
+    gts.append_mtserie(mts_name='ptb', mts=d)
     # -------------------
     
     # add correction data for the 698 Sr clock

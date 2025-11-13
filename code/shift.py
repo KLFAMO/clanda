@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
-from ml_data import mlb, ml698
+from ml_data import mlb, ml698, ml813, mlatoms
 
 def parab_model(x, a, b, c):
     return a * x*x + b*x + c
@@ -186,13 +186,26 @@ class Shift_sqr(Shift):
     def get_shift(self, x):
         return self.model(x, *self.popt, self.c)
         
+def get_shift_b(x):
+    s = Shift_sqr(mes=mlb)
+    s.fit()
+    return s.get_shift(x)
 
-# m = mlb
-m = ml698
+def get_shift_698(x):
+    s = Shift_lin(mes=ml698)
+    s.fit()
+    return s.get_shift(x)
 
-# s = Shift_sqr(mes=m)
-s = Shift_lin(mes=m)
-s.fit()
-# print(s.get_shift(0.15))
-print(s.get_shift(8.06))
-s.plot()
+
+if __name__ == "__main__":
+    # m = mlb
+    # m = ml698
+    m = ml813
+    # m = mlatoms
+
+    # s = Shift_sqr(mes=m)
+    s = Shift_lin(mes=m)
+    s.fit()
+    # print(s.get_shift(0.15))
+    print(s.get_shift(8.06))
+    s.plot()
