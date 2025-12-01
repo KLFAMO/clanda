@@ -1,26 +1,44 @@
-import numpy as np
-from matplotlib import pyplot as plt
+from get_data_sr_link import get_data
 
-from_str = '2025-03-26'
-to_str = '2025-03-30'
-data_str = from_str
-# get path of current script
-import os
-script_dir = os.path.dirname(os.path.abspath(__file__))
-# get project script by going one level up
-project_dir = os.path.dirname(script_dir)
-print(f'Project directory: {project_dir}')
+gts = get_data(
+    included_tables={
+        "sr1_ml1_f": {'sh_s':0, 'tol_s':5},
+        "sr1_ml1_probL": {'sh_s':0, 'tol_s':5},
+        # "sr1_ml1_atomsL": {'sh_s':0, 'tol_s':5},
+        # "sr1_698_PD_ampl": {'sh_s':0, 'tol_s':5},
+        # "comb2_f_avg_counter0": {'sh_s':0.05, 'tol_s':0},
+        "comb2_f_avg_counter5": {'sh_s':0.05, 'tol_s':0},
+        "comb2_f_avg_counter6": {'sh_s':0.05, 'tol_s':0},
+        # "comb2_f_avg_counter7": {'sh_s':0.05, 'tol_s':0},
+    },
+    # days=(60754, 60756),
+    # days=(60761, 60762),
+    # days=(60763, 60764),
+    # days=(60788, 60791),
+    days=(60764, 60765),
+    rm_link_err=False,
+    rm_sr_err=False,
+)
 
-comp_name = 'UMK_LO-UMK_RLS'
+# gts.get_range(60764.902, 60764.918)
+# gts.get_range(60755.05, 60755.1)
+# gts.get_range(60761.85, 60761.9)
+gts.get_range(60764.2275, 60764.245)
 
-# load comparator data files
-d1 = np.loadtxt(f'{project_dir}/tock_data/{comp_name}/{data_str}_{comp_name}.dat')
+# d = gts.mts_dict['sr1_ml1_probL']
+# d.hist(bins=100, orientation='horizontal')
 
-print(d1)
-# plot data
-plt.figure(figsize=(10, 5))
-plt.plot(d1[:, 0], d1[:, 1], label='Comparator Data')
-plt.xlabel('Time (MJD)')
-plt.ylabel('Frequency Difference (Hz)')
-plt.legend()
-plt.show()
+gts.plot(mts_names=[
+    # 'sr1_ml1_atomsL',
+    "sr1_ml1_f",
+    'sr1_ml1_probL',
+    "comb2_f_avg_counter5",
+    # "comb2_f_avg_counter7",
+    # "comb2_f_avg_counter6",
+    # 'difc56',
+    # 'rfsr',
+    # # 'rpd',
+    # 'fsr',
+    # 'sr1_698_PD_ampl',
+    # 'cor',
+], time_unit='s')

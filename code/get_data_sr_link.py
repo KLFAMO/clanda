@@ -1,4 +1,6 @@
-from timanda.tserie import TSerie, MTSerie, GTserie
+from timanda.mtserie import MTSerie
+from timanda.tserie import TSerie
+from timanda.gtserie import GTserie
 from rm_data import rm_periods, rm_periods_link, rm_periods_ml
 
 # Correction data for the 698 Sr clock
@@ -25,13 +27,14 @@ cor_val = [x + 21.72 for x in cor_val]  # to get the same offset as in the data 
 def get_data(
         included_tables, days=(60751, 60765),
         rm_link_err=False, rm_sr_err=False, rm_ml_err=False,
-        mjd_range=None
+        mjd_range=None,
+        ptb=None,
     ):
 
     days_range = days[1] - days[0] + 1
 
     cor_ts =  TSerie(mjd=cor_mjd, val=cor_val)
-    cor = MTSerie(TSerie=cor_ts)
+    cor = MTSerie(tseries=[cor_ts])
     cor, mask = cor.resample2(
         period_s=1, sh_s=0, tol_s=24*60*60,
         start_mjd=days[0],
@@ -58,17 +61,18 @@ def get_data(
         gts.append_mtserie(mts_name=table, mts=d)
 
     # add ptb data ------
-    d = MTSerie()
-    for day in range(days[0], days[1]+1):
-        d.add_mjdf_from_datfile(f'data_files/export_{day}/ptb.dat', delimiter='\t', skiprows=3)
-    d, rm_mask = d.resample2(
-        period_s=1, sh_s=0.05,
-        tol_s=0,
-        start_mjd=days[0],
-        stop_mjd=days[0]+days_range
-    )
-    common_rm_mask = common_rm_mask | rm_mask if common_rm_mask is not None else rm_mask
-    gts.append_mtserie(mts_name='ptb', mts=d)
+    if ptb is not None:
+        d = MTSerie()
+        for day in range(days[0], days[1]+1):
+            d.add_mjdf_from_datfile(f'data_files/export_{day}/ptb.dat', delimiter='\t', skiprows=3)
+        d, rm_mask = d.resample2(
+            period_s=1, sh_s=0.05,
+            tol_s=0,
+            start_mjd=days[0],
+            stop_mjd=days[0]+days_range
+        )
+        common_rm_mask = common_rm_mask | rm_mask if common_rm_mask is not None else rm_mask
+        gts.append_mtserie(mts_name='ptb', mts=d)
     # -------------------
     
     # add correction data for the 698 Sr clock
