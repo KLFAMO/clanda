@@ -5,3 +5,5 @@ code/venv/
 code/__pycache__/
 /tock_data/
 /data_joblib/
+/venv/
+*.pyc
