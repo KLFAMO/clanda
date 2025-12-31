@@ -6,4 +6,5 @@ code/__pycache__/
 /tock_data/
 /data_joblib/
 /venv/
+/comp_scripts/
 *.pyc
