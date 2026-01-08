@@ -25,8 +25,8 @@ def report_graph(g: Graph) -> str:
 
 def build_adjacency(g: Graph) -> Dict[str, List[Tuple[str, List[ComparatorId]]]]:
     """
-    Z grafu (edges) buduje listę sąsiedztwa:
-      adj[u] = [(v, [komparatory_u_v]), ...]
+    Based on edges in Graph. Builds undirected adjacency list.
+    adj[u] = [(v, [comparators_u_v]), ...]
     """
     adj: Dict[str, List[Tuple[str, List[ComparatorId]]]] = {n: [] for n in g.nodes}
     for (u, v), cids in g.edges.items():

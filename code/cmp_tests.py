@@ -1,4 +1,10 @@
-from cmpa import discover_comparators, build_connection_graph, report_graph, find_path_nodes
+from cmpa import (
+    build_adjacency,
+    build_connection_graph,
+    discover_comparators,
+    find_path_nodes,
+    report_graph,
+)
 from pathlib import Path
 
 data_path = Path(__file__).parent.parent / "tock_data"
@@ -20,3 +26,10 @@ if path_nodes is None:
     print(f"No path between {start_node} and {goal_node}")
 else:
     print(" -> ".join(path_nodes))
+
+print("\n*** Graph adjacency *******************************")
+adjacency = build_adjacency(graph_report)
+for node in sorted(adjacency.keys()):
+    neighbors = adjacency[node]
+    neighbor_strs = [f"{nbr} ({len(cids)})" for nbr, cids in neighbors]
+    print(f"\n{node}:\n\t" + "\n\t".join(neighbor_strs))  
