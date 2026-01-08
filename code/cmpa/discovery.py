@@ -18,11 +18,13 @@ def _split_comparator_name(name: str) -> Optional[Tuple[str, str]]:
 
 def discover_comparators(root: Path) -> List[ComparatorMeta]:
     """
-    Zakłada:
+    Get all comparator metas from the given root folder.
+
+    Assume structure:
     root/
       A-B/
         A-B.yml
-        A-B.dat  (i/lub wiele plików .dat)
+        A-B.dat  (and other .dat files)
     """
     metas: List[ComparatorMeta] = []
     for d in sorted([p for p in root.iterdir() if p.is_dir()]):
@@ -32,9 +34,11 @@ def discover_comparators(root: Path) -> List[ComparatorMeta]:
         cid = ComparatorId(d.name)
         yml = d / f"{d.name}.yml"
         if not yml.exists():
-            # fallback: jakby był .yaml
             yml2 = d / f"{d.name}.yaml"
             yml = yml2 if yml2.exists() else None
+
+        if not yml.exists():
+            continue
 
         dats = sorted(d.glob("*.dat"))
 
@@ -42,7 +46,7 @@ def discover_comparators(root: Path) -> List[ComparatorMeta]:
             ComparatorMeta(
                 cid=cid,
                 folder=d,
-                yml_path=yml if yml and yml.exists() else None,
+                yml_path=yml,
                 dat_paths=list(dats),
             )
         )

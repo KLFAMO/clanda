@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Set
+from typing import Any, Dict, List, Tuple, Set
 
 
 @dataclass(frozen=True)
 class ComparatorId:
-    """Id komparatora, np. 'INRIM_DoPTBSr4-INRIM_LoYb'."""
+    """Id of comparator, ex. 'INRIM_DoPTBSr4-INRIM_LoYb'."""
     name: str
 
     @property
@@ -23,28 +23,33 @@ class ComparatorId:
 class ComparatorMeta:
     cid: ComparatorId
     folder: Path
-    yml_path: Optional[Path] = None
+    yml_path: Path | None = None
     dat_paths: List[Path] = field(default_factory=list)
 
-    # parsed YAML (po normalizacji)
+    # parsed YAML (after normalization)
     raw: Dict[str, Any] = field(default_factory=dict)
 
-    # pola typowe
-    rho0_num: Optional[float] = None
-    rho0_den: Optional[float] = None
-    sB: Optional[float] = None
+    # fields from YAML
+    rho0_num: float | None = None
+    rho0_den: float | None = None
+    sB: float | None = None
 
-    ref_osc: Optional[str] = None
-    interval: Optional[float] = None
-    lag: Optional[float] = None
-    weighting: Optional[str] = None
-    grsA: Optional[float] = None
-    nu0A: Optional[float] = None
+    ref_osc: str | None = None
+    interval: float | None = None
+    lag: float | None = None
+    weighting: str | None = None
+    grsA: float | None = None
+    nu0A: float | None = None
 
 
 @dataclass
 class Graph:
-    """Na start: graf nieskierowany struktury połączeń."""
+    """
+    Undirected graph of comparator connections.
+    Nodes are strings (oscillator names).
+    Edges are pairs of nodes mapped to lists of ComparatorId.
+    """
+    
     nodes: Set[str] = field(default_factory=set)
     edges: Dict[Tuple[str, str], List[ComparatorId]] = field(default_factory=dict)
 
