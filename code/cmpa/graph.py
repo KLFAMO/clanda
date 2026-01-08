@@ -37,9 +37,9 @@ def build_adjacency(g: Graph) -> Dict[str, List[Tuple[str, List[ComparatorId]]]]
 
 def find_path_nodes(g: Graph, start: str, goal: str) -> Optional[List[str]]:
     """
-    Zwraca najkrótszą (w liczbie krawędzi) ścieżkę jako listę nodów:
+    Receives the shortest path in number of edges as a list of nodes:
       [start, ..., goal]
-    Jeśli brak połączenia → None.
+    If no connection → None.
     """
     if start not in g.nodes:
         raise ValueError(f"Unknown start node: {start}")
@@ -67,7 +67,7 @@ def find_path_nodes(g: Graph, start: str, goal: str) -> Optional[List[str]]:
     if goal not in prev:
         return None
 
-    # rekonstrukcja
+    # reconstruct path
     path = []
     cur: Optional[str] = goal
     while cur is not None:
@@ -79,8 +79,8 @@ def find_path_nodes(g: Graph, start: str, goal: str) -> Optional[List[str]]:
 
 def path_to_edges(g: Graph, node_path: List[str]) -> List[Tuple[str, str, List[ComparatorId]]]:
     """
-    Zamienia ścieżkę nodów [n0, n1, n2, ...] na listę kroków:
-      (n_i, n_{i+1}, [komparatory między nimi])
+    Converts a node path [n0, n1, n2, ...] to a list of steps:
+      (n_i, n_{i+1}, [comparators between them])
     """
     steps: List[Tuple[str, str, List[ComparatorId]]] = []
     for a, b in zip(node_path, node_path[1:]):

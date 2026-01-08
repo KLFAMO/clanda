@@ -3,6 +3,7 @@ from cmpa import (
     build_connection_graph,
     discover_comparators,
     find_path_nodes,
+    path_to_edges,
     report_graph,
 )
 from pathlib import Path
@@ -26,6 +27,11 @@ if path_nodes is None:
     print(f"No path between {start_node} and {goal_node}")
 else:
     print(" -> ".join(path_nodes))
+
+edges = path_to_edges(graph_report, path_nodes)
+print("\nPath edges:")
+for u, v, cids in edges:
+    print(f"{u} <--> {v}   ({len(cids)}): " + ", ".join(cid.name for cid in cids))  
 
 print("\n*** Graph adjacency *******************************")
 adjacency = build_adjacency(graph_report)

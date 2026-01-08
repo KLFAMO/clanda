@@ -36,8 +36,9 @@ def _as_str(x: Any) -> Optional[str]:
 
 def load_yaml_into_meta(meta: ComparatorMeta) -> ComparatorMeta:
     """
-    Wczytuje YAML i uzupełnia pola meta.
-    Jeśli YAML brak – zostawia meta bez zmian.
+    Reads YAML and fills meta fields.
+    If YAML is missing – leaves meta unchanged.
+    Returns updated meta.
     """
     if meta.yml_path is None:
         return meta
