@@ -65,4 +65,18 @@ for cmp in comparators:
             gts.append_mtserie(mts_name=cmp.cid.name, mts=d)
     print("MTS: ", d)
 # gts.get_range(60760.6, 60760.7)
+gts.align_all_to_grid_zoh_and_drop_missing(
+    period_s = 1,
+    sh_s = 0.0,
+    snap_s = 0.1,
+    tol_s = 0.001,
+    start_mjd = fmjd,
+    stop_mjd = tmjd+1,
+    new_gts = False,
+    out_name = "aligned_common",
+    hold_last = False,
+)
+# gts.math_mts_and_number("multiply", "UMK_LO-UMK_Sr1", -1, "minus" )
+# gts.math_mts_and_mts("add", "UMK_LO-UMK_RLS", "minus", "out")
+# gts.math_mts_and_mts("add", "PTB_Si-PTB_Sr3_CombKnoten", "out", "final")
 gts.plot()
