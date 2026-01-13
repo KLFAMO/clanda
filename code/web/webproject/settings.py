@@ -122,6 +122,14 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# globalny katalog static (dla dev)
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+# katalog docelowy dla collectstatic (dla produkcji)
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 
 INSTANCE_DIR = Path(BASE_DIR) / "instance"
 LOCAL_SETTINGS = INSTANCE_DIR / "local_settings.py"

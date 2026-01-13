@@ -1,18 +1,26 @@
 from pathlib import Path
+from django.conf import settings
 
 from django import forms
-from django.conf import settings
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.views import View
 from django.views.generic import TemplateView
 
-from cmpa.discovery import discover_comparators
-from cmpa.graph import build_connection_graph, find_path_nodes, path_to_edges
+
+from cmpa import (
+    discover_comparators,
+    build_connection_graph,
+    find_path_nodes,
+    path_to_edges,
+    calc_nodes_ratio,
+)
 
 
 class PathPickForm(forms.Form):
     start = forms.ChoiceField(choices=[], required=True, label="Start node")
     goal = forms.ChoiceField(choices=[], required=True, label="Goal node")
-    t0_mjd = forms.FloatField(required=False, label="t0 (MJD)")
-    t1_mjd = forms.FloatField(required=False, label="t1 (MJD)")
+    fmjd = forms.IntegerField(required=True, label="fmjd (int)")
+    tmjd = forms.IntegerField(required=True, label="tmjd (int)")
 
     def __init__(self, *args, node_choices=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -22,54 +30,104 @@ class PathPickForm(forms.Form):
 
     def clean(self):
         cleaned = super().clean()
-        t0 = cleaned.get("t0_mjd")
-        t1 = cleaned.get("t1_mjd")
-        if (t0 is not None) and (t1 is not None) and (t0 >= t1):
-            self.add_error("t1_mjd", "t1 musi być większe niż t0.")
+        fmjd = cleaned.get("fmjd")
+        tmjd = cleaned.get("tmjd")
+        if fmjd is not None and tmjd is not None and fmjd > tmjd:
+            self.add_error("tmjd", "tmjd musi być >= fmjd.")
         return cleaned
 
 
 class NodePathView(TemplateView):
     template_name = "network/node_path.html"
 
-    def build_graph(self):
-        data_dir = Path(settings.CMPA_DATA_DIR).resolve()
-        d = discover_comparators(data_dir)
+    def _build_graph(self):
+        root = Path(settings.CMPA_DATA_DIR)
+        d = discover_comparators(root)
         g = build_connection_graph(d)
-        return g
+        return d, g
 
-    def get_node_choices(self, g):
+    def get(self, request, *args, **kwargs):
+        d, g = self._build_graph()
+
         nodes = sorted(str(n) for n in g.nodes)
-        return [(n, n) for n in nodes]
+        node_choices = [(n, n) for n in nodes]
 
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-
-        g = self.build_graph()
-        node_choices = self.get_node_choices(g)
-
-        # Form działa na GET, żeby odświeżenie było "automatyczne" po zmianie pól
-        form = PathPickForm(self.request.GET or None, node_choices=node_choices)
+        # Form zawsze "bound" do GET, żeby pola NIE znikały po odświeżeniu
+        form = PathPickForm(request.GET or None, node_choices=node_choices)
 
         path_nodes = None
         path_edges = None
         error = None
 
-        if form.is_bound and form.is_valid():
-            start = form.cleaned_data["start"]
-            goal = form.cleaned_data["goal"]
+        # Ścieżkę liczymy TYLKO po kliknięciu Find path
+        do_path = request.GET.get("action") == "path"
 
-            try:
-                pn = find_path_nodes(g, start, goal)   # lista nodów na ścieżce
-                pe = path_to_edges(g, pn)              # lista krawędzi (u, v, cids)
-                path_nodes = pn
-                path_edges = pe
-            except Exception as e:
-                # Jeśli nie ma ścieżki albo Twoje funkcje rzucają wyjątek
-                error = f"Nie udało się wyznaczyć ścieżki: {e}"
+        if do_path:
+            if form.is_valid():
+                start = form.cleaned_data["start"]
+                goal = form.cleaned_data["goal"]
+                try:
+                    pn = find_path_nodes(g, start, goal)
+                    pe = path_to_edges(g, pn)
+                    path_nodes = pn
+                    path_edges = pe
+                except Exception as e:
+                    error = f"Nie udało się wyznaczyć ścieżki: {e}"
+            else:
+                # błędy formularza pokażą się w template
+                pass
 
-        ctx["form"] = form
-        ctx["path_nodes"] = path_nodes
-        ctx["path_edges"] = path_edges
-        ctx["error"] = error
-        return ctx
+        ctx = {
+            "form": form,
+            "path_nodes": path_nodes,
+            "path_edges": path_edges,
+            "error": error,
+        }
+        return self.render_to_response(ctx)
+
+
+class RatioApiView(View):
+    """
+    GET /api/ratio/?start=...&goal=...&fmjd=...&tmjd=...
+    Zwraca: x_tab, y_tab (listy float) do wykresu
+    """
+
+    def get(self, request):
+        start = request.GET.get("start")
+        goal = request.GET.get("goal")
+        fmjd = request.GET.get("fmjd")
+        tmjd = request.GET.get("tmjd")
+
+        if not all([start, goal, fmjd, tmjd]):
+            return HttpResponseBadRequest("Missing start/goal/fmjd/tmjd")
+
+        try:
+            fmjd = int(fmjd)
+            tmjd = int(tmjd)
+        except ValueError:
+            return HttpResponseBadRequest("fmjd/tmjd must be integers")
+
+        if fmjd > tmjd:
+            return HttpResponseBadRequest("fmjd must be <= tmjd")
+
+        mts = calc_nodes_ratio(
+            fmjd=fmjd,
+            tmjd=tmjd,
+            start_node=start,
+            goal_node=goal,
+        )
+
+        x_tab = [float(v) for v in mts.mjd_tab()]
+        y_tab = [float(v) for v in mts.val_tab()]
+
+        return JsonResponse({
+            "x_tab": x_tab,
+            "y_tab": y_tab,
+            "meta": {
+                "start": start,
+                "goal": goal,
+                "fmjd": fmjd,
+                "tmjd": tmjd,
+                "series": "final",
+            }
+        })

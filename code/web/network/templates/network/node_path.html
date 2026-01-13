@@ -1,10 +1,11 @@
 <!doctype html>
 <html>
 <head>
+  {% load static %}
   <meta charset="utf-8">
-  <title>Wybór ścieżki</title>
+  <title>Node path</title>
   <style>
-    .row { display: flex; gap: 16px; align-items: end; flex-wrap: wrap; }
+    .row { display: flex; gap: 16px; align-items: end; flex-wrap: wrap; margin-bottom: 10px; }
     .field { min-width: 260px; }
     .error { color: #b00020; margin: 10px 0; }
     code { background: #f6f6f6; padding: 2px 4px; border-radius: 4px; }
@@ -12,8 +13,9 @@
     th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; }
   </style>
 </head>
+
 <body>
-  <h1>Ścieżka między nodami</h1>
+  <h1>Path between nodes</h1>
 
   <form id="pathForm" method="get">
     <div class="row">
@@ -26,22 +28,26 @@
         <label for="{{ form.goal.id_for_label }}">{{ form.goal.label }}</label><br>
         {{ form.goal }}
       </div>
+    </div>
 
+    <div class="row">
       <div class="field">
-        <label for="{{ form.t0_mjd.id_for_label }}">{{ form.t0_mjd.label }}</label><br>
-        {{ form.t0_mjd }}
+        <label for="{{ form.fmjd.id_for_label }}">{{ form.fmjd.label }}</label><br>
+        {{ form.fmjd }}
       </div>
 
       <div class="field">
-        <label for="{{ form.t1_mjd.id_for_label }}">{{ form.t1_mjd.label }}</label><br>
-        {{ form.t1_mjd }}
+        <label for="{{ form.tmjd.id_for_label }}">{{ form.tmjd.label }}</label><br>
+        {{ form.tmjd }}
+      </div>
+
+      <div class="field">
+        <button type="submit" name="action" value="path">Find path</button>
       </div>
     </div>
 
     {% if form.errors %}
-      <div class="error">
-        {{ form.errors }}
-      </div>
+      <div class="error">{{ form.errors }}</div>
     {% endif %}
   </form>
 
@@ -50,21 +56,21 @@
   {% endif %}
 
   {% if path_nodes %}
-    <h2>Ścieżka (nody)</h2>
+    <h2>Path (nodes)</h2>
     <p>
       {% for n in path_nodes %}
         <code>{{ n }}</code>{% if not forloop.last %} → {% endif %}
       {% endfor %}
     </p>
 
-    <h2>Krawędzie</h2>
+    <h2>Edges</h2>
     <table>
       <thead>
         <tr>
           <th>u</th>
           <th>v</th>
-          <th>liczba comparatorów</th>
-          <th>comparatory (nazwy)</th>
+          <th>number of comparators</th>
+          <th>comparators (names)</th>
         </tr>
       </thead>
       <tbody>
@@ -82,15 +88,27 @@
         {% endfor %}
       </tbody>
     </table>
-  {% else %}
-    <p>Wybierz <code>Start node</code> i <code>Goal node</code>, aby zobaczyć ścieżkę.</p>
   {% endif %}
 
-  <script>
-    // Automatyczne odświeżanie po zmianie pól (GET)
-    const form = document.getElementById("pathForm");
-    const inputs = form.querySelectorAll("select, input");
-    inputs.forEach(el => el.addEventListener("change", () => form.submit()));
-  </script>
+  <hr>
+
+  <h2>Ratio plot</h2>
+
+  <!-- URL API w data-api -->
+  <button
+    id="btnCompute"
+    type="button"
+    data-api="{% url 'network:api_ratio' %}"
+  >
+    Calc and plot
+  </button>
+
+  <div id="plotWrap" style="width: 1000px; height: 450px; border:1px solid #ddd;">
+    <canvas id="plot" style="display:block;"></canvas>
+  </div>
+
+  <pre id="status" style="margin-top: 10px;"></pre>
+
+  <script type="module" src="{% static 'js/ratio_plot.js' %}"></script>
 </body>
 </html>
