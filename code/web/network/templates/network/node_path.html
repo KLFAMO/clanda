@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Wybór ścieżki</title>
+  <style>
+    .row { display: flex; gap: 16px; align-items: end; flex-wrap: wrap; }
+    .field { min-width: 260px; }
+    .error { color: #b00020; margin: 10px 0; }
+    code { background: #f6f6f6; padding: 2px 4px; border-radius: 4px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 12px; }
+    th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; }
+  </style>
+</head>
+<body>
+  <h1>Ścieżka między nodami</h1>
+
+  <form id="pathForm" method="get">
+    <div class="row">
+      <div class="field">
+        <label for="{{ form.start.id_for_label }}">{{ form.start.label }}</label><br>
+        {{ form.start }}
+      </div>
+
+      <div class="field">
+        <label for="{{ form.goal.id_for_label }}">{{ form.goal.label }}</label><br>
+        {{ form.goal }}
+      </div>
+
+      <div class="field">
+        <label for="{{ form.t0_mjd.id_for_label }}">{{ form.t0_mjd.label }}</label><br>
+        {{ form.t0_mjd }}
+      </div>
+
+      <div class="field">
+        <label for="{{ form.t1_mjd.id_for_label }}">{{ form.t1_mjd.label }}</label><br>
+        {{ form.t1_mjd }}
+      </div>
+    </div>
+
+    {% if form.errors %}
+      <div class="error">
+        {{ form.errors }}
+      </div>
+    {% endif %}
+  </form>
+
+  {% if error %}
+    <div class="error">{{ error }}</div>
+  {% endif %}
+
+  {% if path_nodes %}
+    <h2>Ścieżka (nody)</h2>
+    <p>
+      {% for n in path_nodes %}
+        <code>{{ n }}</code>{% if not forloop.last %} → {% endif %}
+      {% endfor %}
+    </p>
+
+    <h2>Krawędzie</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>u</th>
+          <th>v</th>
+          <th>liczba comparatorów</th>
+          <th>comparatory (nazwy)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u, v, cids in path_edges %}
+          <tr>
+            <td>{{ u }}</td>
+            <td>{{ v }}</td>
+            <td>{{ cids|length }}</td>
+            <td>
+              {% for cid in cids %}
+                {{ cid.name }}{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Wybierz <code>Start node</code> i <code>Goal node</code>, aby zobaczyć ścieżkę.</p>
+  {% endif %}
+
+  <script>
+    // Automatyczne odświeżanie po zmianie pól (GET)
+    const form = document.getElementById("pathForm");
+    const inputs = form.querySelectorAll("select, input");
+    inputs.forEach(el => el.addEventListener("change", () => form.submit()));
+  </script>
+</body>
+</html>

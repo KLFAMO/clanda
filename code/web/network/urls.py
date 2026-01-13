@@ -1,6 +1,8 @@
 from django.urls import path
-from .views import NodePickerView
+from .views import NodePathView
+
+app_name = "network"
 
 urlpatterns = [
-    path("nodes/", NodePickerView.as_view(), name="node_picker"),
+    path("nodes/", NodePathView.as_view(), name="node_path"),
 ]
