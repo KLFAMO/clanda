@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cmpa"
+version = "0.1.0"
+description = "Comparator graph and node analysis"
+authors = [{name = "Piotr Morzynski"}]
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["."]

@@ -9,3 +9,5 @@ code/__pycache__/
 /comp_scripts/
 *.pyc
 code/settings.py
+code/web/db.sqlite3
+code/web/instance/

@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Nody</title>
+  <style>
+    .errorlist { color: #b00020; margin: 8px 0; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(240px, 1fr)); gap: 6px 16px; }
+  </style>
+</head>
+<body>
+  <h1>Lista nodów</h1>
+
+  <form method="post">
+    {% csrf_token %}
+
+    {{ form.non_field_errors }}
+    {{ form.nodes.errors }}
+
+    <div class="grid">
+      {{ form.nodes }}
+    </div>
+
+    <p><button type="submit">Zatwierdź wybór</button></p>
+  </form>
+
+  {% if selected %}
+    <h2>Wybrane</h2>
+    <ul>
+      <li>{{ selected.0 }}</li>
+      <li>{{ selected.1 }}</li>
+    </ul>
+  {% endif %}
+
+  <script>
+    // UX: klientowo blokujemy zaznaczenie > 2 (serwer i tak waliduje)
+    const boxes = Array.from(document.querySelectorAll('input[type="checkbox"]'));
+    boxes.forEach(b => b.addEventListener("change", () => {
+      const checked = boxes.filter(x => x.checked);
+      if (checked.length > 2) b.checked = false;
+    }));
+  </script>
+</body>
+</html>
