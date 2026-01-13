@@ -10,4 +10,4 @@ code/__pycache__/
 *.pyc
 code/settings.py
 code/web/db.sqlite3
-code/web/instance/
+code/web/instance/local_settings.py
