@@ -60,6 +60,24 @@ function applyDataViaSetOptions(x_tab, y_tab, meta) {
   });
 }
 
+function extractXYFromTimandaMTS(data) {
+  if (!data || data.schema !== "timanda-tsplot" || data.type !== "MTS") {
+    return { x_tab: [], y_tab: [], seg0: null };
+  }
+
+  if (!Array.isArray(data.segments) || data.segments.length === 0) {
+    return { x_tab: [], y_tab: [], seg0: null };
+  }
+
+  const seg0 = data.segments[0] || {};
+  const x_tab = Array.isArray(seg0.mjd) ? seg0.mjd : [];
+  const y_tab = Array.isArray(seg0.val) ? seg0.val : [];
+
+  return { x_tab, y_tab, seg0 };
+}
+
+
+
 async function fetchRatioAndPlot() {
   const statusEl = $("status");
   const btn = $("btnCompute");
@@ -91,12 +109,11 @@ async function fetchRatioAndPlot() {
   }
 
   const data = await resp.json();
-  const x_tab = data.x_tab || [];
-  const y_tab = data.y_tab || [];
 
-  statusEl.textContent = `OK: ${x_tab.length} punktów`;
-  window.andaData = { x_tab, y_tab, meta: data.meta };
+  const { x_tab, y_tab, seg0 } = extractXYFromTimandaMTS(data);
 
+  statusEl.textContent = `OK: ${x_tab.length} punktów (segments[0])`;
+  window.andaData = { x_tab, y_tab, meta: data.meta, seg0 };
   applyDataViaSetOptions(x_tab, y_tab, data.meta);
 }
 

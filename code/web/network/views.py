@@ -2,7 +2,7 @@ from pathlib import Path
 from django.conf import settings
 
 from django import forms
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse
 from django.views import View
 from django.views.generic import TemplateView
 
@@ -116,18 +116,10 @@ class RatioApiView(View):
             start_node=start,
             goal_node=goal,
         )
+        mts.split()
 
-        x_tab = [float(v) for v in mts.mjd_tab()]
-        y_tab = [float(v) for v in mts.val_tab()]
-
-        return JsonResponse({
-            "x_tab": x_tab,
-            "y_tab": y_tab,
-            "meta": {
-                "start": start,
-                "goal": goal,
-                "fmjd": fmjd,
-                "tmjd": tmjd,
-                "series": "final",
-            }
-        })
+        return HttpResponse(
+            mts.to_json(),
+            content_type="application/json"
+        )
+    
