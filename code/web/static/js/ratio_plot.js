@@ -109,12 +109,8 @@ async function fetchRatioAndPlot() {
   }
 
   const data = await resp.json();
-
-  const { x_tab, y_tab, seg0 } = extractXYFromTimandaMTS(data);
-
-  statusEl.textContent = `OK: ${x_tab.length} punktów (segments[0])`;
-  window.andaData = { x_tab, y_tab, meta: data.meta, seg0 };
-  applyDataViaSetOptions(x_tab, y_tab, data.meta);
+  ensurePlot();
+  plot.setData(data);
 }
 
 window.addEventListener("DOMContentLoaded", () => {
