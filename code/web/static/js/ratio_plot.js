@@ -110,6 +110,7 @@ async function fetchRatioAndPlot() {
 
   const data = await resp.json();
   ensurePlot();
+  console.log("fetchRatioAndPlot: received data:", data);
   plot.setData(data);
 }
 
