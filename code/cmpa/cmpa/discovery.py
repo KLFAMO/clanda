@@ -33,9 +33,6 @@ def discover_comparators(root: Path) -> List[ComparatorMeta]:
 
         cid = ComparatorId(d.name)
         yml = d / f"{d.name}.yml"
-        if not yml.exists():
-            yml2 = d / f"{d.name}.yaml"
-            yml = yml2 if yml2.exists() else None
 
         if not yml.exists():
             continue

@@ -8,7 +8,15 @@ from .model import ComparatorMeta
 
 
 def _normalize_yaml_root(obj: Any) -> Dict[str, Any]:
-    # repo potrafi mieć listę z jednym dict
+    """
+    Convert list to dict if necessary
+
+    Args:
+        obj (Any): _description_
+
+    Returns:
+        Dict[str, Any]: _description_
+    """
     if isinstance(obj, dict):
         return obj
     if isinstance(obj, list):
@@ -47,7 +55,7 @@ def load_yaml_into_meta(meta: ComparatorMeta) -> ComparatorMeta:
     raw = _normalize_yaml_root(loaded)
     meta.raw = raw
 
-    # typowe klucze zgodne z optical-link-data-format
+    # typical keys according to optical-link-data-format
     meta.rho0_num = _as_float(raw.get("numrhoBA"))
     meta.rho0_den = _as_float(raw.get("denrhoBA"))
     meta.sB = _as_float(raw.get("sB"))
@@ -58,6 +66,6 @@ def load_yaml_into_meta(meta: ComparatorMeta) -> ComparatorMeta:
     meta.weighting = _as_str(raw.get("weighting"))
     meta.grsA = _as_float(raw.get("grsA"))
     meta.nu0A = _as_float(raw.get("nu0A"))
+    meta.nu0B = _as_float(raw.get("nu0B"))
 
-    # kompatybilność: jeśli repo ma inne nazwy kluczy, dodamy je tu później
     return meta
