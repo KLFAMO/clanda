@@ -18,9 +18,9 @@ stop_mjd = mjd+1
 period_mjd = 1/24/60/60  # 1 second
 nm = np.arange(start_mjd, stop_mjd, period_mjd)
 
-shift = 15e6
+shift = -70e6
 
-with open(f"../share_files/PTB_NIRP-PTB_RLS/{date_str}_PTB_NIRP-PTB_RLS.dat", 'w') as f:
+with open(f"../tock_data/PTB_NIRP-PTB_RLS/{date_str}_PTB_NIRP-PTB_RLS.dat", 'w') as f:
     # f.write(f"# MJD\tA-B\tvalidity\n")
     
     for mjd in nm:

@@ -215,7 +215,10 @@ def calc_ratio_from_gts(
     # ratio = rho0_prod * (1 + R_sum)
     gts.math_mts_and_number("multiply", "__tmp_one_plus_R__", rho0_prod, "ratio")
 
-    return gts.mts_dict["ratio"]
+    # return gts.mts_dict["ratio"]
+    gts.math_mts_and_number("multiply", rsum_name, 1.0, "ratio_rel")
+    return gts.mts_dict["ratio_rel"]
+
 
 def build_gts_for_path(
     fmjd: int,
