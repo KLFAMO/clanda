@@ -11,3 +11,4 @@ code/__pycache__/
 code/settings.py
 code/web/db.sqlite3
 code/web/instance/local_settings.py
+**/*.egg-info/

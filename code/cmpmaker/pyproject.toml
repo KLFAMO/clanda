@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cmpmaker"
+version = "0.1.0"
+description = "Comparator maker"
+authors = [{name = "Piotr Morzynski"}]
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["."]
