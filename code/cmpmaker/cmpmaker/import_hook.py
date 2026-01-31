@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Optional
 
 from .mjd_context import get_current_mjd
+from .import_trace import register_import
 
 _HOOK_INSTALLED = False
 
@@ -89,6 +90,8 @@ class CmpmakerScriptsFinder(importlib.abc.MetaPathFinder):
             spec = importlib.machinery.ModuleSpec(fullname, loader=None, is_package=True)
             spec.submodule_search_locations = [str(d)]
             return spec
+
+        register_import(fullname, candidate)
 
         loader = importlib.machinery.SourceFileLoader(fullname, str(candidate))
         return importlib.util.spec_from_loader(fullname, loader, origin=str(candidate))
