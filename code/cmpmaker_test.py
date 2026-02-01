@@ -1,8 +1,3 @@
 from cmpmaker.runner import run
-from cmpmaker.show_segments import show_segments
 
-show_segments(
-    entry="scripts.comparators.PTB_RLS-UMK_RLS",
-    from_mjd=71000,
-    to_mjd=80010,
-)
+run("get_raw", from_mjd=60760, to_mjd=60761)

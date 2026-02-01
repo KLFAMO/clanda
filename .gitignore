@@ -1,5 +1,6 @@
 /data_files/
 /share_files/
+/npdata/
 /__pycache__/
 code/venv/
 code/__pycache__/
