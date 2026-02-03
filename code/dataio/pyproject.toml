@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dataio"
+version = "0.1.0"
+description = "Time series management"
+authors = [{name = "Piotr Morzynski"}]
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["."]
