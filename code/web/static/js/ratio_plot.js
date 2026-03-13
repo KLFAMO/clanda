@@ -14,24 +14,18 @@ function getFormValue(formId, name) {
 }
 
 function syncCanvasSize() {
-  const wrap = $("plotWrap");
-  const canvas = $("plot");
-  if (!wrap || !canvas) return;
-
-  const w = wrap.clientWidth;
-  const h = wrap.clientHeight;
-  if (w <= 0 || h <= 0) return;
-
-  if (canvas.width !== w) canvas.width = w;
-  if (canvas.height !== h) canvas.height = h;
+  // Intentionally left empty: tsplot's resize routine uses
+  // canvas.getBoundingClientRect() and devicePixelRatio to
+  // set the actual canvas backing size. Ensure the canvas
+  // CSS fills its container (template sets width/height:100%).
+  return;
 }
 
 function ensurePlot() {
   const canvas = $("plot");
   if (!canvas) throw new Error("Brak <canvas id='plot'>.");
-  syncCanvasSize();
   if (!plot) {
-    plot = new CanvasPlot(canvas);
+    plot = CanvasPlot.create(canvas);
     window._plot = plot;
     console.log("CanvasPlot methods:", Object.getOwnPropertyNames(Object.getPrototypeOf(plot)));
   }
@@ -51,11 +45,9 @@ function applyDataViaSetOptions(x_tab, y_tab, meta) {
 
   syncCanvasSize();
   p.setOptions(opts);
-  p.render();
 
   // dodatkowy render po layout
   requestAnimationFrame(() => {
-    syncCanvasSize();
     p.render();
   });
 }
@@ -118,14 +110,13 @@ window.addEventListener("DOMContentLoaded", () => {
   ensurePlot();
 
   const btn = $("btnCompute");
-  btn.addEventListener("click", fetchRatioAndPlot);
+  if (btn) btn.addEventListener("click", fetchRatioAndPlot);
 
-  // ResizeObserver = render bez F12
+  // Render on container resize or window resize — tsplot will handle DPR sizing.
   const wrap = $("plotWrap");
   if (wrap && "ResizeObserver" in window) {
     const ro = new ResizeObserver(() => {
       if (!plot) return;
-      syncCanvasSize();
       plot.render();
     });
     ro.observe(wrap);
@@ -133,13 +124,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
   window.addEventListener("resize", () => {
     if (!plot) return;
-    syncCanvasSize();
     plot.render();
   });
 
   window.addEventListener("load", () => {
     if (!plot) return;
-    syncCanvasSize();
     plot.render();
   });
 });
