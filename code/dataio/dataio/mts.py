@@ -4,7 +4,7 @@ from timanda.mtserie import MTSerie
 
 from pathlib import Path
 from typing import Iterable, List, Union, Tuple, Optional
-import re
+import re, shutil
 
 from .paths import DATA_ROOT
 
@@ -95,7 +95,7 @@ def get_data_single_mjd(
     Returns:
         MTSerie object
     """
-    file = Path(DATA_ROOT) / dataset / f"{mjd:d}" / f"{dataset}_{mjd:d}.npz"
+    file = Path(DATA_ROOT) / dataset / f"{mjd:d}" / f"{dataset}_{mjd:d}_raw.npz"
     print(f"Loading data from: {file}")
     print(file)
     if not file.is_file():
@@ -104,4 +104,19 @@ def get_data_single_mjd(
     mts = MTSerie()
     mts.append_npz(file)
     return mts
-    
+
+
+def mk_clean_single_mjd(
+    dataset: str, mjd: int, force = False
+):
+    folder = Path(DATA_ROOT) / dataset / f"{mjd:d}"
+    src = folder / f"{dataset}_{mjd:d}_raw.npz"
+    dst = folder / f"{dataset}_{mjd:d}_cln.npz"
+
+    if not src.exists():
+        raise FileNotFoundError(src)
+
+    if dst.exists() and not force:
+        print("clean file already exists")
+    else:
+        shutil.copy2(src, dst)

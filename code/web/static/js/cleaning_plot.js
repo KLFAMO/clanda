@@ -24,11 +24,11 @@ window.addEventListener("DOMContentLoaded", () => {
       }
       const url = `/timeseries/api/plot_mts/?name=${encodeURIComponent(name)}&mjd=${encodeURIComponent(mjd)}`;
       try {
-        if (statusEl) statusEl.textContent = "Ładowanie…";
+        if (statusEl) statusEl.textContent = "Loading…";
         await plot.loadFromUrl(url);
-        if (statusEl) statusEl.textContent = `Wykreślono: ${name} (MJD ${mjd})`;
+        if (statusEl) statusEl.textContent = `Ploted: ${name} (MJD ${mjd})`;
       } catch (err) {
-        if (statusEl) statusEl.textContent = "Błąd: " + (err?.message || String(err));
+        if (statusEl) statusEl.textContent = "Error: " + (err?.message || String(err));
         console.error(err);
       }
     });
