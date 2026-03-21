@@ -22,7 +22,7 @@ def import_raw(*, from_mjd: float, to_mjd: float):
             path = f"../npdata/{key}/{int(from_mjd)}"
             if not os.path.exists(path):
                 os.makedirs(path)
-            mts.dump_npz(f"{path}/{key}_{from_mjd}.npz")
+            mts.dump_npz(f"{path}/{key}_{from_mjd}_raw.npz")
 
 
 def import_first_day_raw(from_mjd, to_mjd):

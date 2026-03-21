@@ -1,4 +1,4 @@
-# comparator link ptb-umk
+# comparator link ptb_NIRT-ptb_RLS
 
 # # PTB_NIRP-FAMO_RLS50T -> fixed frequency shift +15 MHz  (od Jochena)
 # # schemat  NIRP - FAMO_RLS = 15 MHz
@@ -22,9 +22,9 @@ def calc(*, from_mjd, to_mjd, **kwargs):
     period_mjd = 1/24/60/60  # 1 second
     nm = np.arange(start_mjd, stop_mjd, period_mjd)
 
-    shift = 50e6
+    shift = -70e6
 
-    with open(f"../share_files/PTB_RLS-UMK_RLS/{date_str}_PTB_RLS-UMK_RLS.dat", 'w') as f:
+    with open(f"../share_files/PTB_NIRP-PTB_RLS/{date_str}_PTB_NIRP-PTB_RLS.dat", 'w') as f:
         # f.write(f"# MJD\tA-B\tvalidity\n")
         
         for mjd in nm:

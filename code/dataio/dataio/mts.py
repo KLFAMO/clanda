@@ -95,7 +95,7 @@ def get_data_single_mjd(
     Returns:
         MTSerie object
     """
-    file = Path(DATA_ROOT) / dataset / f"{mjd:d}" / f"{dataset}_{mjd:d}_raw.npz"
+    file = Path(DATA_ROOT) / dataset / f"{int(mjd):d}" / f"{dataset}_{int(mjd):d}_raw.npz"
     print(f"Loading data from: {file}")
     print(file)
     if not file.is_file():
