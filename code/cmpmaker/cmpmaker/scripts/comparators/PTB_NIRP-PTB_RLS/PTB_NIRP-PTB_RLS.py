@@ -3,19 +3,13 @@
 # # PTB_NIRP-FAMO_RLS50T -> fixed frequency shift +15 MHz  (od Jochena)
 # # schemat  NIRP - FAMO_RLS = 15 MHz
 
-import astropy.time as ast
+from dataio.dataio import mjd2utc
 import numpy as np
 
 def calc(*, from_mjd, to_mjd, **kwargs):
 
-    input_data = []
-
-    def MJD2UTC(mjd, strfmt='%Y-%m-%d %H:%M:%S'):
-        t = ast.Time(mjd, format='mjd')
-        return t.strftime(strfmt)
-
     mjd = from_mjd
-    date_str = MJD2UTC(mjd, strfmt='%Y-%m-%d')
+    date_str = mjd2utc(mjd, strfmt='%Y-%m-%d')
 
     start_mjd = mjd
     stop_mjd = mjd+1

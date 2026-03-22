@@ -16,4 +16,12 @@ DATAMAP = {
         },
         "unit": "Hz",
     },
+    "sr1_aom_cor": {
+        "description": "DDS value sent to Sr1 AOM to correct the clock laser frequency",
+        "source":{
+            "type": "famo_database",
+            "table": "sr1_ml1_f",
+        },
+        "unit": "Hz",
+    },
 }
