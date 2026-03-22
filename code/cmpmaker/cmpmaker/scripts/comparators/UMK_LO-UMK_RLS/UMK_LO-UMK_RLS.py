@@ -1,14 +1,11 @@
-import astropy.time as ast
-from dataio.mts import get_data_single_mjd
+
+from dataio.mts import get_data_single_mjd, mjd2utc
 from timanda.gtserie import GTserie
 
-def MJD2UTC(mjd, strfmt='%Y-%m-%d %H:%M:%S'):
-    t = ast.Time(mjd, format='mjd')
-    return t.strftime(strfmt)
 
 def calc(*, from_mjd, to_mjd, **kwargs):
     mjd = int(from_mjd)
-    date_str = MJD2UTC(from_mjd, strfmt='%Y-%m-%d')
+    date_str = mjd2utc(from_mjd, strfmt='%Y-%m-%d')
     d = get_data_single_mjd("rls_hydro_cavity_beat", from_mjd)
     gts = GTserie('comp2')
     gts.append_mtserie("rls_hydro_cavity_beat", d)

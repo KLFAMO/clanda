@@ -7,9 +7,14 @@ from typing import Iterable, List, Union, Tuple, Optional
 import re, shutil
 
 from .paths import DATA_ROOT
+import astropy.time as ast
 
 PathLike = Union[str, Path]
 
+
+def mjd2utc(mjd, strfmt='%Y-%m-%d %H:%M:%S'):
+    t = ast.Time(mjd, format='mjd')
+    return t.strftime(strfmt)
 
 def get_data_names(
     roots: Union[PathLike, Iterable[PathLike], None] = None,
