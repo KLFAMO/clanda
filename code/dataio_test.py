@@ -1,7 +1,23 @@
-from dataio.mts import get_data_single_mjd, get_data_names, mk_clean_single_mjd
-# print(get_data_names())
-d = get_data_single_mjd("rls_hydro_cavity_beat", 60760)
-# mk_clean_single_mjd("rls_hydro_cavity_beat", 60760)
-d.set_flags_in_range(60760.8382, 60760.8935, 0)
+from dataio.mts import get_data_single_mjd, get_data_names, set_flags_in_range
+from rm_data import rm_periods_link, rm_periods
 
-d.plotf()
+dataset = "sr1_prob"
+
+# for rm_period in rm_periods:
+#     print(f"Setting flags for MJD {rm_period[0]} - {rm_period[1]}")
+#     set_flags_in_range(
+#         dataset=dataset,
+#         from_mjd=rm_period[0],
+#         to_mjd=rm_period[1],
+#         flag_value=0
+#     )
+
+get_data_single_mjd(dataset, 60760).plotf()
+
+get_data_single_mjd(dataset, 60761).plotf()
+
+get_data_single_mjd(dataset, 60762).plotf()
+
+get_data_single_mjd(dataset, 60763).plotf()
+
+get_data_single_mjd(dataset, 60764).plotf()

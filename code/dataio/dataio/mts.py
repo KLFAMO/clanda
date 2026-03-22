@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from timanda.mtserie import MTSerie
+from timanda.gtserie import GTserie
 
 from pathlib import Path
 from typing import Iterable, List, Union, Tuple, Optional
@@ -111,17 +112,48 @@ def get_data_single_mjd(
     return mts
 
 
-def mk_clean_single_mjd(
-    dataset: str, mjd: int, force = False
-):
-    folder = Path(DATA_ROOT) / dataset / f"{mjd:d}"
-    src = folder / f"{dataset}_{mjd:d}_raw.npz"
-    dst = folder / f"{dataset}_{mjd:d}_cln.npz"
+# def mk_clean_single_mjd(
+#     dataset: str, mjd: int, force = False
+# ):
+#     """
+#     Create cleaned data file for a given dataset and MJD by checking flags in the raw file.
+#     If the cleaned file already exists and force=False, do nothing.
+#     """
+#     folder = Path(DATA_ROOT) / dataset / f"{mjd:d}"
+#     src = folder / f"{dataset}_{mjd:d}_raw.npz"
+#     dst = folder / f"{dataset}_{mjd:d}_cln.npz"
 
-    if not src.exists():
-        raise FileNotFoundError(src)
+#     if not src.exists():
+#         raise FileNotFoundError(src)
 
-    if dst.exists() and not force:
-        print("clean file already exists")
-    else:
-        shutil.copy2(src, dst)
+#     if dst.exists() and not force:
+#         print("clean file already exists")
+#     else:
+#         shutil.copy2(src, dst)
+
+
+def set_flags_in_range( dataset: str, from_mjd: float, to_mjd: float, flag_value: int):
+    """Set flags in the specified MJD range for all MTSeries of a dataset."""
+    
+    mjds = [mjd for mjd in list_available_mjds(dataset) if from_mjd-1 <= mjd <= to_mjd+1]
+    for mjd in mjds:
+        mts = get_data_single_mjd(dataset, mjd)
+        mts.set_flags_in_range(from_mjd, to_mjd, flag_value)
+        folder = Path(DATA_ROOT) / dataset / f"{int(mjd):d}"
+        file = folder / f"{dataset}_{int(mjd):d}_raw.npz"
+        mts.dump_npz(file)
+
+
+def get_gts_single_mjd(
+    datasets: List[str],
+    mjd: int, 
+    gts_name: str = 'gts',
+    allowed_flag=None,
+) -> GTserie:
+    gts = GTserie(gts_name)
+    for dataset in datasets:
+        mts = get_data_single_mjd(dataset, mjd)
+        if allowed_flag is not None:
+            mts.flag_filter(allowed_flag)
+        gts.append_mtserie(dataset, mts)
+    return gts
