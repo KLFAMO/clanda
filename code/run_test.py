@@ -1,7 +1,16 @@
 from cmpmaker.runner import run
 
-result = run(
-    script_path="comparators/UMK_LO-UMK_RLS",
-    from_mjd=60760.0,
-    to_mjd=60760.1,
-)
+# run(
+#     # script_path="comparators/UMK_LO-UMK_RLS",
+#     script_path="comparators/UMK_LO-UMK_Sr1",
+#     from_mjd=60761.0,
+#     to_mjd=60761.1,
+# )
+
+for i in range(60751, 60795):
+    print(f"Running test for MJD {i}")
+    run(
+        script_path="get_raw",
+        from_mjd=i,
+        to_mjd=i+0.1,
+    )

@@ -24,16 +24,20 @@ def calc(*, from_mjd, to_mjd, **kwargs):
     gts.math_mts_and_number('add', 'ft1', 0, 'ft')
     gts.math_mts_and_mts('add', 'fc', 'comb_hydro_698', 'ftmp')
     gts.add_mts_to_mts('ftmp', 'ft', 'fsrnc')
-    gts.add_mts_to_mts('fsrnc', 'cor', 'fsrc')
+    # gts.add_mts_to_mts('fsrnc', 'cor', 'fsrc')
+    gts.math_mts_and_number('add', 'fsrnc', 0, 'fsrc')
     gts.math_mts_and_number('divide', 'fsrc', ptb_freq+nc_rls, 'ratio')
 
     gts.math_mts_and_number('add', 'zero', 1, 'valid')
     gts.math_mts_and_number('add', 'zero', 1e-15, 'uncert')
 
-    # gts.plot(mts_names=[
-    #     'rls_hydro_cavity_beat',
-    #     'comp2',
-    # ])
+    gts.plot(mts_names=[
+        'comb_hydro_698',
+        'sr1_aom_cor',
+        'ratio',
+        ], 
+        save_filename='plot.png',
+        show=0)
 
     # gts.create_comparator_file(
     #     # filename=f'../share_files/UMK_LO-UMK_RLS/{date_str}_UMK_LO-UMK_RLS.dat',
