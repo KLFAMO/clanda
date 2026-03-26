@@ -1,5 +1,13 @@
 
 DATAMAP = {
+    "comb_frep_dm": {
+        "description": "Downmixed frep of the comb",
+        "source":{
+            "type": "famo_database",
+            "table": "comb2_f_avg_counter0",
+        },
+        "unit": "Hz",
+    },
     "comb_hydro_698": {
         "description": "Beat note of the 698 nm laser with the comb",
         "source":{

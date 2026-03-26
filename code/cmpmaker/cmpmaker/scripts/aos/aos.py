@@ -67,12 +67,3 @@ def calc(*, from_mjd, to_mjd, create_cmp_file: bool = False, plot: bool = False,
             ], 
             # save_filename='plot.png',
             show=1)
-
-    if create_cmp_file:
-        gts.create_comparator_file(
-            filename=f'../tock_data/UMK_LO-UMK_Sr1/{date_str}_UMK_LO-UMK_Sr1.dat',
-            # filename=f'{date_str}_UMK_LO-UMK_Sr1.dat',
-            mts_names=['DAB', 'valid', 'uncert'],
-            headers=['A->B', 'flag', 'relative systematic uncertainty'],
-            formats=['.6f', '.0f', '.4e'],
-        )

@@ -107,6 +107,7 @@ def _calc_nodes_ratio(
         goal_node=goal_node,
         data_path=data_path,
     )
+    gts.plot()
     ratio = calc_ratio_from_gts(
         gts=gts,
         edge_info=edge_info,

@@ -14,7 +14,7 @@ run(
     script_path="comparators/UMK_LO-UMK_Sr1",
     from_mjd=mjd,
     to_mjd=mjd + 0.1,
-    plot=True,
+    plot=False,
     create_cmp_file=True,
 )
 
