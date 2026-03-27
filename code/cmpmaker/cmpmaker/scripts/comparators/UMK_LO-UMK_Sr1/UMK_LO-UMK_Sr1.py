@@ -13,7 +13,7 @@ def calc(*, from_mjd, to_mjd, create_cmp_file: bool = False, plot: bool = False,
     # gts.get_range(mjd, mjd+1) 
 
     gts = get_gts_single_mjd(datasets=["comb_hydro_698", "sr1_aom_cor"], mjd=mjd, allowed_flag=1)
-    gts, cmm = gts.align_all_to_grid_zoh_and_drop_missing()
+    gts, cmm = gts.align_all_to_grid_zoh_and_drop_missing(start_mjd=mjd, stop_mjd=mjd+1)
     
     fth_Sr88 = 429_228_066_418_007.0 # theoretical frequency of clock transition (den) (A)
     fth_lo = 194.4e12  # theoretical frequency of the LO laser after NC AOM  (num) (B)
@@ -25,7 +25,7 @@ def calc(*, from_mjd, to_mjd, create_cmp_file: bool = False, plot: bool = False,
     gts.math_mts_and_number('multiply', 'sr1_aom_cor', 4, 'fc_aom') # atoms correction
     # gts.math_mts_and_number('multiply', 'cor', 1, 'mcor')  # total shift 698
     # gts.math_mts_and_mts('add', 'fc_aom', 'mcor', 'mfc')  # atoms correction + total shift
-    gts.math_mts_and_number('add', 'fc_aom', -263, 'mfc')  # atoms correction + total shift  temporary, without total shift
+    gts.math_mts_and_number('add', 'fc_aom', -99, 'mfc')  # atoms correction + total shift  temporary, without total shift
     gts.math_mts_and_number('add', 'zero', fth_Sr88, 'fth88')  # theoretical frequency of the 698 Sr clock
     gts.math_mts_and_mts('add', 'fth88', 'mfc', 'fcav698')  # frequency of the 698 cavity
     gts.math_mts_and_number('add', 'fcav698', 84e6, 'fcomb698') # frequency of the 698 laser going to the comb
@@ -36,16 +36,16 @@ def calc(*, from_mjd, to_mjd, create_cmp_file: bool = False, plot: bool = False,
     gts.math_mts_and_number('add', 'fN698', -70e6, 'tmp1')  # frequency between N=1 and N698
     gts.math_mts_and_number('divide', 'tmp1', N698, 'fr')  # f_rep
 
-    # comparison with the AOS
-    gts.math_mts_and_number('add', 'comb_frep_dm', 980e6, 'fraostmp')
-    gts.math_mts_and_number('divide', 'fraostmp', 4, 'fr_aos')  # frequency measured by the AOS
-    gts.math_mts_and_number('multiply', 'fr', -1, 'mfr')  # negative fr
-    gts.math_mts_and_mts('add', 'mfr', 'fr_aos', 'diffr')  # diffr = fr - fr_aos
-    gts.math_mts_and_number('divide', 'diffr', 250e6, 'diffr_rel')  # diffr relative AOS vs Sr88
-    gts.append_mtserie(
-        mts_name='avg',
-        mts=gts.mts_dict['diffr_rel'].resample(period_s=600)
-    )
+    # # comparison with the AOS
+    # gts.math_mts_and_number('add', 'comb_frep_dm', 980e6, 'fraostmp')
+    # gts.math_mts_and_number('divide', 'fraostmp', 4, 'fr_aos')  # frequency measured by the AOS
+    # gts.math_mts_and_number('multiply', 'fr', -1, 'mfr')  # negative fr
+    # gts.math_mts_and_mts('add', 'mfr', 'fr_aos', 'diffr')  # diffr = fr - fr_aos
+    # gts.math_mts_and_number('divide', 'diffr', 250e6, 'diffr_rel')  # diffr relative AOS vs Sr88
+    # gts.append_mtserie(
+    #     mts_name='avg',
+    #     mts=gts.mts_dict['diffr_rel'].resample(period_s=600)
+    # )
 
     # calculate 1542 cavity frequency
     N1542 = 777_621.0
