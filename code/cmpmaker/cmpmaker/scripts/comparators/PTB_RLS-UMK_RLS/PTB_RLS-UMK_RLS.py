@@ -18,7 +18,7 @@ def calc(*, from_mjd, to_mjd, **kwargs):
 
     shift = 50e6
 
-    with open(f"../share_files/PTB_RLS-UMK_RLS/{date_str}_PTB_RLS-UMK_RLS.dat", 'w') as f:
+    with open(f"../tock_data/PTB_RLS-UMK_RLS/{date_str}_PTB_RLS-UMK_RLS.dat", 'w') as f:
         # f.write(f"# MJD\tA-B\tvalidity\n")
         
         for mjd in nm:

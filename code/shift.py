@@ -198,14 +198,14 @@ def get_shift_698(x):
 
 
 if __name__ == "__main__":
-    # m = mlb
+    m = mlb
     # m = ml698
-    m = ml813
+    # m = ml813
     # m = mlatoms
 
-    # s = Shift_sqr(mes=m)
-    s = Shift_lin(mes=m)
+    s = Shift_sqr(mes=m)
+    # s = Shift_lin(mes=m)
     s.fit()
-    # print(s.get_shift(0.15))
-    print(s.get_shift(8.06))
+    print(s.get_shift(0.15))
+    # print(s.get_shift(8.06))
     s.plot()

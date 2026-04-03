@@ -34,7 +34,7 @@ def import_raw(*, from_mjd: float, to_mjd: float, names: list[str] | tuple[str] 
 def import_first_day_raw(from_mjd, to_mjd, names: list[str] | tuple[str] | set[str] | None = None):
     fmjd = int(from_mjd)
     tmjd = fmjd + 1 - 1e-8
-    import_raw(from_mjd=fmjd, to_mjd=tmjd, names=names)
+    import_raw(from_mjd=fmjd, to_mjd=tmjd, names=['comb_frep_dm'])
 
 def calc(*, from_mjd, to_mjd, **kwargs):
     import_first_day_raw(from_mjd=from_mjd, to_mjd=to_mjd)

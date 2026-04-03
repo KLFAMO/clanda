@@ -1,6 +1,7 @@
 
 from dataio.mts import get_data_single_mjd, mjd2utc, get_gts_single_mjd
 # from timanda.gtserie import GTserie
+from scripts.sr1_budget import shift
 
 
 def calc(*, from_mjd, to_mjd, create_cmp_file: bool = False, plot: bool = False, **kwargs):
@@ -25,7 +26,7 @@ def calc(*, from_mjd, to_mjd, create_cmp_file: bool = False, plot: bool = False,
     gts.math_mts_and_number('multiply', 'sr1_aom_cor', 4, 'fc_aom') # atoms correction
     # gts.math_mts_and_number('multiply', 'cor', 1, 'mcor')  # total shift 698
     # gts.math_mts_and_mts('add', 'fc_aom', 'mcor', 'mfc')  # atoms correction + total shift
-    gts.math_mts_and_number('add', 'fc_aom', -99, 'mfc')  # atoms correction + total shift  temporary, without total shift
+    gts.math_mts_and_number('add', 'fc_aom', shift, 'mfc')  # atoms correction + total shift  temporary, without total shift
     gts.math_mts_and_number('add', 'zero', fth_Sr88, 'fth88')  # theoretical frequency of the 698 Sr clock
     gts.math_mts_and_mts('add', 'fth88', 'mfc', 'fcav698')  # frequency of the 698 cavity
     gts.math_mts_and_number('add', 'fcav698', 84e6, 'fcomb698') # frequency of the 698 laser going to the comb
@@ -50,7 +51,7 @@ def calc(*, from_mjd, to_mjd, create_cmp_file: bool = False, plot: bool = False,
     # calculate 1542 cavity frequency
     N1542 = 777_621.0
     gts.math_mts_and_number('multiply', 'fr', N1542, 'tmp2') # frequency between N=1 and N1542
-    gts.math_mts_and_number('add', 'tmp2', 70e6+35e6, 'f1542')  # frequency of the 1542 cavity
+    gts.math_mts_and_number('add', 'tmp2', 35e6+35e6, 'f1542')  # frequency of the 1542 cavity
 
     # calculate comparator
     gts.math_mts_and_number('add', 'f1542', -fth_lo, 'DAB')
@@ -58,6 +59,9 @@ def calc(*, from_mjd, to_mjd, create_cmp_file: bool = False, plot: bool = False,
     ## additional columns
     gts.math_mts_and_number('add', 'zero', 1, 'valid')
     gts.math_mts_and_number('add', 'zero', 1e-15, 'uncert')
+
+    # gts.rm_outlayers('DAB', target=197641414)
+
 
     if plot:
         gts.plot(mts_names=[

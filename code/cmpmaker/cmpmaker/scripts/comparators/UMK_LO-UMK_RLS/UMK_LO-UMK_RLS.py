@@ -22,8 +22,8 @@ def calc(*, from_mjd, to_mjd, **kwargs):
     ])
 
     gts.create_comparator_file(
-        # filename=f'../share_files/UMK_LO-UMK_RLS/{date_str}_UMK_LO-UMK_RLS.dat',
-        filename=f'{date_str}_UMK_LO-UMK_RLS.dat',
+        filename=f'../tock_data/UMK_LO-UMK_RLS/{date_str}_UMK_LO-UMK_RLS.dat',
+        # filename=f'{date_str}_UMK_LO-UMK_RLS.dat',
         mts_names=['comp2', 'valid', 'uncert'],
         headers=['A->B', 'flag', 'relative systematic uncertainty'],
         formats=['.6f', '.0f', '.4e'],

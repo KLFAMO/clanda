@@ -83,10 +83,10 @@ def _nu0_ref_from_start_node(metas: List["ComparatorMeta"], start_node: str) -> 
 
 
 def calc_nodes_ratio(
-    fmjd: int = 60760,
-    tmjd: int = 60764,
-    start_node: str = "UMK_Sr1",
-    goal_node: str = "PTB_Sr3_CombKnoten",
+    fmjd: int,
+    tmjd: int,
+    start_node: str,
+    goal_node: str,
     impl: str = "my",
 ) -> MTSerie:
     if impl == "my":
@@ -95,10 +95,10 @@ def calc_nodes_ratio(
         raise ValueError(f"Unknown impl='{impl}' in calc_nodes_ratio.")
 
 def _calc_nodes_ratio(
-    fmjd: int = 60760,
-    tmjd: int = 60764,
-    start_node: str = "UMK_Sr1",
-    goal_node: str = "PTB_Sr3_CombKnoten",
+    fmjd: int,
+    tmjd: int,
+    start_node: str,
+    goal_node: str,
 ) -> MTSerie:
     gts, edge_info, pn = build_gts_for_path(
         fmjd=fmjd,
@@ -107,7 +107,7 @@ def _calc_nodes_ratio(
         goal_node=goal_node,
         data_path=data_path,
     )
-    gts.plot()
+    # gts.plot()
     ratio = calc_ratio_from_gts(
         gts=gts,
         edge_info=edge_info,
@@ -229,13 +229,13 @@ def build_gts_for_path(
     data_path: Path,
 ) -> Tuple["GTserie", List[Tuple[str, str, ComparatorMeta, bool, str]], List[str]]:
     """
-    Buduje GTserie zawierające tylko te komparatory, które leżą na ścieżce start->goal,
-    wczytuje dane .dat dla zadanego zakresu dni i alignuje je do wspólnej siatki.
+    Build GTserie including comparators including path start->goal,
+    read data .dat for given range and align them to common grid.
 
-    Zwraca: (gts, metas_all, pn)
-    - gts: gotowe, wyrównane serie komparatorów na wspólnej siatce
-    - metas_all: wszystkie meta (przydaje się dalej do mapowania YAML->meta)
-    - pn: lista węzłów na ścieżce (start..goal)
+    Returns: (gts, metas_all, pn)
+    - gts: ready, aligned series of comparators on common grid
+    - metas_all: all metadata (useful for YAML->meta mapping)
+    - pn: list of nodes on the path (start..goal)
     """
     # 1) discover comparators and load YAMLs into meta
     metas_raw = discover_comparators(data_path)
@@ -286,10 +286,6 @@ def build_gts_for_path(
     mjds = list(range(fmjd, tmjd + 1))
     mjds_d = [mjd_to_yyyy_mm_dd(m) for m in mjds]
 
-    # print("\n[MJD range]")
-    # print(f"fmjd: {fmjd} -> {mjd_to_yyyy_mm_dd(fmjd)}")
-    # print(f"tmjd: {tmjd} -> {mjd_to_yyyy_mm_dd(tmjd)}")
-
     print("\n[LOAD] Creating GTserie and loading MTSeries:")
     gts = GTserie(name=f"{start_node}->{goal_node}")
 
@@ -302,6 +298,7 @@ def build_gts_for_path(
                 mts.add_mjdf_from_datfile(dat_path, delimiter="\t", skiprows=0)
         gts.append_mtserie(mts_name=meta.cid.name, mts=mts)
 
+    gts.plot()
     # 5) align data to common grid
     gts.align_all_to_grid_zoh_and_drop_missing(
         period_s=1,

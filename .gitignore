@@ -5,6 +5,7 @@
 code/venv/
 code/__pycache__/
 /tock_data/
+/tock_data*/
 /data_joblib/
 /venv/
 /comp_scripts/
