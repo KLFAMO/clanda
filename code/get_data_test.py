@@ -1,4 +1,6 @@
-from timanda.tserie import TSerie, MTSerie, GTserie, load_gts
+from timanda.tserie import TSerie
+from timanda.mtserie import MTSerie
+from timanda.gtserie import GTserie, load_gts
 from rm_data import rm_periods, rm_periods_link, rm_periods_ml
 
 # Correction data for the 698 Sr clock

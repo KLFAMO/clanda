@@ -48,10 +48,13 @@ class Budget:
         
 if __name__ == "__main__":
     b = Budget()
-    b.add_shift('Zeeman', -99.078150556, 0.67)
-    b.add_shift('Light 698', -21.723053684, 0.14)
-    b.add_shift('Light 813', -0.34, 0.47)
-    b.add_shift('Collisions', 0.35, 0.52)
+    # b.add_shift('Zeeman', -99.078150556, 0.67)
+    b.add_shift('Zeeman', -44.6, 0.67)
+    # b.add_shift('Light 698', -21.723053684, 0.14)
+    # b.add_shift('Light 698', -9.35, 0.14)
+    # b.add_shift('Light 698', -2.5, 0.14)
+    b.add_shift('Light 813', -0.36, 0.47)
+    b.add_shift('Collisions', -0.01, 0.52)
     b.add_shift('BBR', -2.21, 0.075)
     b.add_shift('Gravit', 2.34, 0.1)
     # b.add_shift('UTC(AOS)-UTC', -0.4, 0.43)

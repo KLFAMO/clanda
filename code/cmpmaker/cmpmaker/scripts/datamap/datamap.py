@@ -56,4 +56,12 @@ DATAMAP = {
         },
         "unit": "au",
     },
+    "intensity_698_PD": {
+        "description": "Intensity of 698 laser measured by a photodiode after the chamber",
+        "source":{
+            "type": "famo_database",
+            "table": "sr1_698_PD_ampl",
+        },
+        "unit": "V",
+    },
 }

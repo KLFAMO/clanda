@@ -1,7 +1,7 @@
 
 from dataio.mts import get_data_single_mjd, mjd2utc, get_gts_single_mjd
 # from timanda.gtserie import GTserie
-from scripts.sr1_budget import shift
+# from scripts.sr1_budget import shift
 
 
 def calc(*, from_mjd, to_mjd, create_cmp_file: bool = False, plot: bool = False, **kwargs):
@@ -13,7 +13,10 @@ def calc(*, from_mjd, to_mjd, create_cmp_file: bool = False, plot: bool = False,
     # gts.append_mtserie("sr1_aom_cor", get_data_single_mjd("sr1_aom_cor", from_mjd))
     # gts.get_range(mjd, mjd+1) 
 
-    gts = get_gts_single_mjd(datasets=["comb_hydro_698", "sr1_aom_cor"], mjd=mjd, allowed_flag=1)
+    gts = get_gts_single_mjd(
+        datasets=["comb_hydro_698", "sr1_aom_cor", "intensity_698_PD"], 
+        mjd=mjd, allowed_flag=1
+    )
     gts, cmm = gts.align_all_to_grid_zoh_and_drop_missing(start_mjd=mjd, stop_mjd=mjd+1)
     
     fth_Sr88 = 429_228_066_418_007.0 # theoretical frequency of clock transition (den) (A)
@@ -26,7 +29,11 @@ def calc(*, from_mjd, to_mjd, create_cmp_file: bool = False, plot: bool = False,
     gts.math_mts_and_number('multiply', 'sr1_aom_cor', 4, 'fc_aom') # atoms correction
     # gts.math_mts_and_number('multiply', 'cor', 1, 'mcor')  # total shift 698
     # gts.math_mts_and_mts('add', 'fc_aom', 'mcor', 'mfc')  # atoms correction + total shift
-    gts.math_mts_and_number('add', 'fc_aom', shift, 'mfc')  # atoms correction + total shift  temporary, without total shift
+    # lightshift
+    gts.math_mts_and_number('multiply', 'intensity_698_PD', -0.0382, 'lscor')  # light shift correction
+    gts.math_mts_and_mts('add', 'fc_aom', 'lscor', 'lsfc_aom')  # atoms correction + light shift correction
+
+    gts.math_mts_and_number('add', 'lsfc_aom', -44.84, 'mfc')  # atoms correction + total shift  temporary, without total shift
     gts.math_mts_and_number('add', 'zero', fth_Sr88, 'fth88')  # theoretical frequency of the 698 Sr clock
     gts.math_mts_and_mts('add', 'fth88', 'mfc', 'fcav698')  # frequency of the 698 cavity
     gts.math_mts_and_number('add', 'fcav698', 84e6, 'fcomb698') # frequency of the 698 laser going to the comb
