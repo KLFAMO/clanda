@@ -102,8 +102,8 @@ def get_data_single_mjd(
         MTSerie object
     """
     file = Path(DATA_ROOT) / dataset / f"{int(mjd):d}" / f"{dataset}_{int(mjd):d}_raw.npz"
-    print(f"Loading data from: {file}")
-    print(file)
+    # print(f"Loading data from: {file}")
+    # print(file)
     if not file.is_file():
         raise FileNotFoundError(f"Data file not found: {file}")
 
@@ -144,15 +144,35 @@ def set_flags_in_range( dataset: str, from_mjd: float, to_mjd: float, flag_value
         mts.dump_npz(file)
 
 
+def set_flags_in_area( dataset: str, x1: float, y1: float, x2: float, y2: float, flag_value: int):
+    """Set flags in the specified area for all MTSeries of a dataset."""
+    
+    mjds = list_available_mjds(dataset)
+    for mjd in mjds:
+        mts = get_data_single_mjd(dataset, mjd)
+        mts.set_flags_in_area(x1, y1, x2, y2, flag_value)
+        folder = Path(DATA_ROOT) / dataset / f"{int(mjd):d}"
+        file = folder / f"{dataset}_{int(mjd):d}_raw.npz"
+        mts.dump_npz(file)
+
+
 def get_gts_single_mjd(
     datasets: List[str],
     mjd: int, 
     gts_name: str = 'gts',
     allowed_flag=None,
+    from_mjd=None,
+    to_mjd=None,
 ) -> GTserie:
     gts = GTserie(gts_name)
     for dataset in datasets:
         mts = get_data_single_mjd(dataset, mjd)
+        if from_mjd is not None or to_mjd is not None:
+            if from_mjd is None:
+                from_mjd = mjd
+            if to_mjd is None:
+                to_mjd = mjd+1
+            mts.getrange_on_self(from_mjd, to_mjd)
         if allowed_flag is not None:
             mts.flag_filter(allowed_flag)
         gts.append_mtserie(dataset, mts)

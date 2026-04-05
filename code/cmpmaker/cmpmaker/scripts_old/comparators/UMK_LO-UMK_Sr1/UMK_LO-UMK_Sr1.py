@@ -1,11 +1,10 @@
 
 from dataio.mts import get_data_single_mjd, mjd2utc, get_gts_single_mjd
 # from timanda.gtserie import GTserie
-from cmpmaker.scripts.sr1_budget import budget
+# from scripts.sr1_budget import shift
 
 
-def calc(*, from_mjd, to_mjd, create_cmp_file: bool = False, plot: bool = False, result_file=None, **kwargs):
-    # print(f"Inside script Calculating UMK_LO-UMK_Sr1 from MJD {from_mjd} to {to_mjd}")
+def calc(*, from_mjd, to_mjd, create_cmp_file: bool = False, plot: bool = False, **kwargs):
     mjd = int(from_mjd)
     date_str = mjd2utc(from_mjd, strfmt='%Y-%m-%d')
 
@@ -15,13 +14,8 @@ def calc(*, from_mjd, to_mjd, create_cmp_file: bool = False, plot: bool = False,
     # gts.get_range(mjd, mjd+1) 
 
     gts = get_gts_single_mjd(
-        datasets=["comb_hydro_698", 
-                  "sr1_aom_cor",
-                #   "intensity_698_PD"
-                  ], 
-        mjd=mjd, allowed_flag=1,
-        from_mjd=from_mjd,
-        to_mjd=to_mjd,
+        datasets=["comb_hydro_698", "sr1_aom_cor", "intensity_698_PD"], 
+        mjd=mjd, allowed_flag=1
     )
     gts, cmm = gts.align_all_to_grid_zoh_and_drop_missing(start_mjd=mjd, stop_mjd=mjd+1)
     
@@ -36,11 +30,10 @@ def calc(*, from_mjd, to_mjd, create_cmp_file: bool = False, plot: bool = False,
     # gts.math_mts_and_number('multiply', 'cor', 1, 'mcor')  # total shift 698
     # gts.math_mts_and_mts('add', 'fc_aom', 'mcor', 'mfc')  # atoms correction + total shift
     # lightshift
-    # gts.math_mts_and_number('multiply', 'intensity_698_PD', -0.0382, 'lscor')  # light shift correction
-    # gts.math_mts_and_mts('add', 'fc_aom', 'lscor', 'lsfc_aom')  # atoms correction + light shift correction
+    gts.math_mts_and_number('multiply', 'intensity_698_PD', -0.0382, 'lscor')  # light shift correction
+    gts.math_mts_and_mts('add', 'fc_aom', 'lscor', 'lsfc_aom')  # atoms correction + light shift correction
 
-    # gts.math_mts_and_number('add', 'fc_aom', -44.84, 'mfc')  # atoms correction + total shift  temporary, without total shift
-    gts.math_mts_and_number('add', 'fc_aom', budget(), 'mfc')  # atoms correction + total shift  temporary, without total shift
+    gts.math_mts_and_number('add', 'lsfc_aom', -44.84, 'mfc')  # atoms correction + total shift  temporary, without total shift
     gts.math_mts_and_number('add', 'zero', fth_Sr88, 'fth88')  # theoretical frequency of the 698 Sr clock
     gts.math_mts_and_mts('add', 'fth88', 'mfc', 'fcav698')  # frequency of the 698 cavity
     gts.math_mts_and_number('add', 'fcav698', 84e6, 'fcomb698') # frequency of the 698 laser going to the comb
@@ -86,13 +79,11 @@ def calc(*, from_mjd, to_mjd, create_cmp_file: bool = False, plot: bool = False,
             # save_filename='plot.png',
             show=1)
 
-    # if create_cmp_file:
-    #     gts.create_comparator_file(
-    #         filename=f'../tock_data/UMK_LO-UMK_Sr1/{date_str}_UMK_LO-UMK_Sr1.dat',
-    #         # filename=f'{date_str}_UMK_LO-UMK_Sr1.dat',
-    #         mts_names=['DAB', 'valid', 'uncert'],
-    #         headers=['A->B', 'flag', 'relative systematic uncertainty'],
-    #         formats=['.6f', '.0f', '.4e'],
-    #     )
-    if result_file is not None:
-        gts.dump_npz(result_file)
+    if create_cmp_file:
+        gts.create_comparator_file(
+            filename=f'../tock_data/UMK_LO-UMK_Sr1/{date_str}_UMK_LO-UMK_Sr1.dat',
+            # filename=f'{date_str}_UMK_LO-UMK_Sr1.dat',
+            mts_names=['DAB', 'valid', 'uncert'],
+            headers=['A->B', 'flag', 'relative systematic uncertainty'],
+            formats=['.6f', '.0f', '.4e'],
+        )
