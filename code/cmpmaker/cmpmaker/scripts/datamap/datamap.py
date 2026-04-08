@@ -64,4 +64,28 @@ DATAMAP = {
         },
         "unit": "V",
     },
+    "sr1_aom_cor_ml2": {
+        "description": "DDS value sent to Sr1 AOM to correct the clock laser frequency",
+        "source":{
+            "type": "famo_database",
+            "table": "sr1_ml2_f",
+        },
+        "unit": "Hz",
+    },
+    "sr1_atoms_ml2": {
+        "description": "Number of atoms in Sr1",
+        "source":{
+            "type": "famo_database",
+            "table": "sr1_ml2_atomsL",
+        },
+        "unit": "au",
+    },
+    "sr1_prob_ml2": {
+        "description": "Excitation probability in Sr1",
+        "source":{
+            "type": "famo_database",
+            "table": "sr1_ml2_probL",
+        },
+        "unit": "au",
+    }
 }

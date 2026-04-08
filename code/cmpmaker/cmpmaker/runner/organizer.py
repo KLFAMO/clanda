@@ -136,13 +136,16 @@ def calc(
                 kwargs=kwargs,
                 result_file=str(result_file),
             )
+            meta["result_file"] = str(result_file)
+            meta["result_file_exists"] = result_file.exists()
             segment_results.append(meta)
 
-            gts = GTserie.load_npz(result_file)
-            segment_objects.append(gts)
-
-            print(f"Loaded segment file: {result_file}", file=sys.stderr)
-            print(f"Segment result meta: {meta}", file=sys.stderr)
+            if meta["result_file_exists"]:
+                gts = GTserie.load_npz(result_file)
+                segment_objects.append(gts)
+                print(f"Loaded segment file: {result_file}", file=sys.stderr)
+            else:
+                print(f"Segment did not produce result file: {result_file}", file=sys.stderr)
 
         merged_result = merge_gts_list(segment_objects)
 

@@ -1,4 +1,4 @@
-from scripts.datamap import DATAMAP
+from cmpmaker.scripts.datamap import DATAMAP
 from timanda.mtserie import MTSerie
 from timanda.utils import get_test_mtserie
 import sys, os
@@ -34,7 +34,9 @@ def import_raw(*, from_mjd: float, to_mjd: float, names: list[str] | tuple[str] 
 def import_first_day_raw(from_mjd, to_mjd, names: list[str] | tuple[str] | set[str] | None = None):
     fmjd = int(from_mjd)
     tmjd = fmjd + 1 - 1e-8
-    import_raw(from_mjd=fmjd, to_mjd=tmjd, names=['intensity_698_PD'])
+    if names is None:
+        names = ['intensity_698_PD']
+    import_raw(from_mjd=fmjd, to_mjd=tmjd, names=names)
 
-def calc(*, from_mjd, to_mjd, **kwargs):
-    import_first_day_raw(from_mjd=from_mjd, to_mjd=to_mjd)
+def calc(*, from_mjd, to_mjd, names: list[str] | tuple[str] | set[str] | None = None, **kwargs):
+    import_first_day_raw(from_mjd=from_mjd, to_mjd=to_mjd, names=names)

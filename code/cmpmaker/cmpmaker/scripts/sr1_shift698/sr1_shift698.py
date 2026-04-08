@@ -1,2 +1,2 @@
 def shift698():
-    return -15
+    return -8.8

@@ -72,7 +72,7 @@ def calc(*, from_mjd, to_mjd, create_cmp_file: bool = False, plot: bool = False,
 
     ## additional columns
     gts.math_mts_and_number('add', 'zero', 1, 'valid')
-    gts.math_mts_and_number('add', 'zero', 1e-15, 'uncert')
+    gts.math_mts_and_number('add', 'zero', 2e-15, 'uncert')
 
     # gts.rm_outlayers('DAB', target=197641414)
 
