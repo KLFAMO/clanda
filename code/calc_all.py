@@ -7,7 +7,7 @@ from cmpa.calc import (
     calc_nodes_ratio,
 )
 
-mjd = 60763
+mjd = 60761
 
 run(
     # script_path="comparators/UMK_LO-UMK_RLS",
